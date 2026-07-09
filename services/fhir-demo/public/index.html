@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CP International HL7 FHIR R4 Integration Explorer</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header Gradient Accents -->
+  <div class="gradient-bg"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">
+        <span class="pulse-icon"></span>
+        <h1>CP International <span>FHIR R4 Integration</span></h1>
+      </div>
+      <p class="header-desc">Transform custom internal patient records to standardized HL7 FHIR R4 resources, run schema validation, and upload live data to the public HAPI FHIR server.</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="navigation-bar">
+      <button class="nav-tab active" data-tab="sandbox">Patient Sandbox (Mapping & Upload)</button>
+      <button class="nav-tab" data-tab="explorer">Public FHIR Server Explorer</button>
+    </nav>
+
+    <!-- Main Grid Layout for Sandbox Tab -->
+    <div id="sandboxTabContent" class="tab-content active-tab-content">
+      <main class="main-grid">
+        <!-- Control Panel: Form Builder -->
+        <section class="card control-panel">
+          <div class="panel-header">
+            <h2 class="section-title">Patient Form Builder</h2>
+            <button type="button" id="randomizeBtn" class="sec-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" class="btn-icon">
+                <path fill="currentColor" d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+              </svg>
+              Randomize Patient
+            </button>
+          </div>
+
+          <form id="patientForm" class="param-form" onsubmit="event.preventDefault();">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="patientHno">Hospital Registration No. (HNO) <span class="required">*</span></label>
+                <input type="text" id="patientHno" placeholder="e.g. 45913/2569" required>
+              </div>
+              <div class="form-group">
+                <label for="patientName">Full Name <span class="required">*</span></label>
+                <input type="text" id="patientName" placeholder="e.g. Jane Smith" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="patientDob">Date of Birth <span class="required">*</span></label>
+                <input type="date" id="patientDob" required>
+              </div>
+              <div class="form-group">
+                <label for="patientAge">Age (Calculated)</label>
+                <input type="number" id="patientAge" placeholder="Calculated automatically" readonly>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="patientGender">Gender <span class="required">*</span></label>
+                <select id="patientGender" required>
+                  <option value="1">1 - Male</option>
+                  <option value="2" selected>2 - Female</option>
+                  <option value="3">3 - Other</option>
+                  <option value="0">0 - Unknown</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="patientPhone">Phone No. <span class="required">*</span></label>
+                <input type="text" id="patientPhone" placeholder="e.g. +66 89 012 3456" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="patientAddress">Address <span class="required">*</span></label>
+              <textarea id="patientAddress" rows="2" placeholder="e.g. 123 Sukhumvit Road, Bangkok" required></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="patientSource">Source Channel <span class="required">*</span></label>
+                <select id="patientSource" required>
+                  <option value="distributor" selected>Distributor</option>
+                  <option value="message">Message</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="patientPlatform">Assessable Platform <span class="required">*</span></label>
+                <select id="patientPlatform" required>
+                  <option value="mobile" selected>Mobile App</option>
+                  <option value="web">Web Portal</option>
+                  <option value="desktop">Desktop Client</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="patientAllergy">Drug Allergy Indicator</label>
+              <input type="text" id="patientAllergy" placeholder="e.g. Penicillin">
+            </div>
+
+            <!-- Action buttons -->
+            <div class="action-grid">
+              <button type="button" id="mapBtn" class="primary-btn">Map to FHIR</button>
+              <button type="button" id="validateBtn" class="primary-btn secondary-style">Validate Compliance</button>
+              <button type="button" id="uploadBtn" class="primary-btn upload-style">Upload to FHIR Server</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Results Display Panel -->
+        <section class="card results-panel">
+          <div class="results-header">
+            <h2 class="section-title">Mapping Results Explorer</h2>
+            <!-- View Switcher -->
+            <div class="view-tabs" id="sandboxViewTabs">
+              <button class="view-btn active" data-view="visual">Visual Mapping</button>
+              <button class="view-btn" data-view="json">Raw JSON</button>
+            </div>
+          </div>
+
+          <!-- Visual View -->
+          <div id="visualSandboxView" class="view-container active-view">
+            <!-- Initial state placeholder -->
+            <div class="placeholder-view" id="sandboxPlaceholder">
+              <svg class="placeholder-icon" viewBox="0 0 24 24" width="48" height="48">
+                <path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2zm0 8H7v-2h10v2z"/>
+              </svg>
+              <p>Change details in the form and click an action button to visualize output</p>
+            </div>
+
+            <!-- Mapping visual details container -->
+            <div id="mappingContent" class="hidden">
+              <!-- Live validation badge -->
+              <div id="validationBadge" class="validation-status-badge">
+                <!-- Dynamically populated -->
+              </div>
+
+              <!-- General metadata return card -->
+              <div id="uploadStatusCard" class="upload-status-card hidden">
+                <!-- Dynamically populated if upload happens -->
+              </div>
+
+              <h3 class="subsection-title">HL7 FHIR R4 Element Mapping Matrix</h3>
+              <div class="mapping-cards-container" id="mappingMatrixContainer">
+                <!-- Mapped cards populated dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- JSON View -->
+          <div id="jsonSandboxView" class="view-container">
+            <div class="placeholder-view" id="sandboxJsonPlaceholder">
+              <svg class="placeholder-icon" viewBox="0 0 24 24" width="48" height="48">
+                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+              </svg>
+              <p>Execute an action to view the raw JSON payload</p>
+            </div>
+            <div id="sandboxJsonContent" class="hidden">
+              <pre><code id="sandboxJsonCode"></code></pre>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Main Grid Layout for Explorer Tab -->
+    <div id="explorerTabContent" class="tab-content">
+      <main class="main-grid">
+        <!-- Control Panel: Explorer query tools -->
+        <section class="card control-panel">
+          <h2 class="section-title">Query Public HAPI FHIR Server</h2>
+          
+          <div class="search-section">
+            <div class="form-group">
+              <label for="lookupPatientId">Look up Patient by ID</label>
+              <div class="input-search-row">
+                <input type="text" id="lookupPatientId" placeholder="e.g. 137089522">
+                <button type="button" id="lookupBtn" class="primary-btn">Fetch Profile</button>
+              </div>
+            </div>
+          </div>
+
+          <hr class="separator">
+
+          <div class="list-section">
+            <div class="panel-header-sub">
+              <h3 class="subsection-title">Recent Patients list</h3>
+              <button type="button" id="refreshRecentBtn" class="sec-btn-small">Refresh</button>
+            </div>
+            <p class="section-help-text">Select a patient from the list below to fetch their full clinical JSON resource from the server:</p>
+            <div class="patient-list" id="recentPatientsList">
+              <div class="list-loading">Fetching from server...</div>
+            </div>
+          </div>
+
+          <hr class="separator">
+
+          <div class="meta-section">
+            <button type="button" id="fetchMetadataBtn" class="sec-btn full-width">
+              Fetch FHIR Server Capability Statement
+            </button>
+          </div>
+        </section>
+
+        <!-- Results Display Panel for Explorer -->
+        <section class="card results-panel">
+          <div class="results-header">
+            <h2 class="section-title">FHIR Resource Explorer</h2>
+            <!-- View Switcher -->
+            <div class="view-tabs" id="explorerViewTabs">
+              <button class="view-btn active" data-view="visual">Visual Profile</button>
+              <button class="view-btn" data-view="json">Raw JSON</button>
+            </div>
+          </div>
+
+          <!-- Visual View -->
+          <div id="visualExplorerView" class="view-container active-view">
+            <div class="placeholder-view" id="explorerPlaceholder">
+              <svg class="placeholder-icon" viewBox="0 0 24 24" width="48" height="48">
+                <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+              <p>Lookup a patient or retrieve metadata to explore details</p>
+            </div>
+
+            <!-- Dynamic UI patient card -->
+            <div id="explorerPatientCard" class="hidden">
+              <div class="profile-card-header">
+                <div class="profile-avatar" id="cardAvatar">?</div>
+                <div class="profile-title-block">
+                  <h3 id="cardName">Name Loading...</h3>
+                  <span class="patient-id-badge" id="cardPatientId">Patient/--</span>
+                </div>
+              </div>
+
+              <div class="profile-grid">
+                <div class="profile-item">
+                  <span class="profile-label">Hospital Registration (HNO)</span>
+                  <strong class="profile-value" id="cardHno">--</strong>
+                </div>
+                <div class="profile-item">
+                  <span class="profile-label">Date of Birth</span>
+                  <strong class="profile-value" id="cardDob">--</strong>
+                </div>
+                <div class="profile-item">
+                  <span class="profile-label">Gender</span>
+                  <strong class="profile-value" id="cardGender">--</strong>
+                </div>
+                <div class="profile-item">
+                  <span class="profile-label">Phone Connection</span>
+                  <strong class="profile-value" id="cardPhone">--</strong>
+                </div>
+                <div class="profile-item full-width">
+                  <span class="profile-label">Residential Address</span>
+                  <strong class="profile-value" id="cardAddress">--</strong>
+                </div>
+                <div class="profile-item">
+                  <span class="profile-label">Ingestion Channel (Source)</span>
+                  <strong class="profile-value" id="cardSource">--</strong>
+                </div>
+                <div class="profile-item">
+                  <span class="profile-label">Assessable Platform</span>
+                  <strong class="profile-value" id="cardPlatform">--</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metadata info container -->
+            <div id="explorerMetadataCard" class="hidden">
+              <div class="meta-card-header">
+                <h3>FHIR Server Capability Statement</h3>
+              </div>
+              <div class="profile-grid">
+                <div class="profile-item">
+                  <span class="profile-label">FHIR Version</span>
+                  <strong class="profile-value" id="metaFhirVer">--</strong>
+                </div>
+                <div class="profile-item">
+                  <span class="profile-label">Software Name</span>
+                  <strong class="profile-value" id="metaName">--</strong>
+                </div>
+                <div class="profile-item">
+                  <span class="profile-label">Publisher</span>
+                  <strong class="profile-value" id="metaPublisher">--</strong>
+                </div>
+                <div class="profile-item">
+                  <span class="profile-label">Status</span>
+                  <strong class="profile-value" id="metaStatus">--</strong>
+                </div>
+                <div class="profile-item full-width">
+                  <span class="profile-label">Service Description</span>
+                  <strong class="profile-value" id="metaDesc">--</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- JSON View -->
+          <div id="jsonExplorerView" class="view-container">
+            <div class="placeholder-view" id="explorerJsonPlaceholder">
+              <svg class="placeholder-icon" viewBox="0 0 24 24" width="48" height="48">
+                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+              </svg>
+              <p>Lookup a resource to explore the raw JSON payload</p>
+            </div>
+            <div id="explorerJsonContent" class="hidden">
+              <pre><code id="explorerJsonCode"></code></pre>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

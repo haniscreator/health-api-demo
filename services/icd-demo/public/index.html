@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WHO ICD-11 API Researcher & Explorer</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header Gradients -->
+  <div class="gradient-bg"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">
+        <span class="pulse-icon"></span>
+        <h1>CP International <span>ICD-11 API POC</span></h1>
+      </div>
+      <p class="header-desc">Explore, search, and navigate the WHO ICD-11 (International Classification of Diseases) database through local endpoint abstractions.</p>
+    </header>
+
+    <!-- Main Grid Layout -->
+    <main class="main-grid">
+      <!-- Control Panel -->
+      <section class="card control-panel">
+        <h2 class="section-title">API Request Builder</h2>
+        
+        <!-- Endpoint Selection Tab Row -->
+        <div class="endpoint-tabs" id="endpointTabs">
+          <button class="tab-btn active" data-endpoint="health">
+            <span class="badge get">GET</span>
+            <span class="label">/health</span>
+          </button>
+          <button class="tab-btn" data-endpoint="token">
+            <span class="badge get">GET</span>
+            <span class="label">/token</span>
+          </button>
+          <button class="tab-btn" data-endpoint="search">
+            <span class="badge get">GET</span>
+            <span class="label">/search</span>
+          </button>
+          <button class="tab-btn" data-endpoint="entity">
+            <span class="badge get">GET</span>
+            <span class="label">/entity/:id</span>
+          </button>
+        </div>
+
+        <!-- Dynamic Parameter Inputs Form -->
+        <form class="param-form" id="paramForm" onsubmit="event.preventDefault();">
+          <div id="healthInputs" class="form-group active-inputs">
+            <p class="form-info">No parameters required. Verifies status of local wrapper server.</p>
+          </div>
+
+          <div id="tokenInputs" class="form-group">
+            <p class="form-info">No parameters required. Fetches or readscached OAuth token details from the backend memory cache.</p>
+          </div>
+
+          <div id="searchInputs" class="form-group">
+            <label for="searchQuery">Search Query <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <input type="text" id="searchQuery" placeholder="e.g. diabetes, hypertension, asthma" value="diabetes">
+            </div>
+            <p class="form-help">Enter text keywords to search the ICD-11 Foundation taxonomy.</p>
+          </div>
+
+          <div id="entityInputs" class="form-group">
+            <label for="entityId">Entity ID <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <input type="text" id="entityId" placeholder="e.g. 465177735">
+            </div>
+            <p class="form-help">Enter the specific WHO numeric ID of the ICD-11 classification node.</p>
+          </div>
+
+          <!-- Action Button -->
+          <button type="submit" id="sendBtn" class="primary-btn">
+            <span>Execute Request</span>
+            <svg class="arrow-icon" viewBox="0 0 24 24" width="18" height="18">
+              <path fill="currentColor" d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"/>
+            </svg>
+            <span class="loader hidden"></span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Results Display Panel -->
+      <section class="card results-panel">
+        <div class="results-header">
+          <h2 class="section-title">Response Explorer</h2>
+          
+          <!-- View switcher Tabs -->
+          <div class="view-tabs" id="viewTabs">
+            <button class="view-btn active" data-view="visual">Visual Explorer</button>
+            <button class="view-btn" data-view="json">Raw JSON</button>
+          </div>
+        </div>
+
+        <!-- Visual Explorer View -->
+        <div id="visualView" class="view-container active-view">
+          <div class="placeholder-view" id="visualPlaceholder">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" width="48" height="48">
+              <path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2zm0 8H7v-2h10v2z"/>
+            </svg>
+            <p>Send a request to see the graphical explorer output</p>
+          </div>
+          
+          <div id="visualContent" class="hidden">
+            <!-- Dynamic graphical components rendered here by JS -->
+          </div>
+        </div>
+
+        <!-- Raw JSON View -->
+        <div id="jsonView" class="view-container">
+          <div class="placeholder-view" id="jsonPlaceholder">
+            <svg class="placeholder-icon" viewBox="0 0 24 24" width="48" height="48">
+              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            <p>Send a request to view the response payload JSON</p>
+          </div>
+          
+          <div id="jsonContent" class="hidden">
+            <pre><code id="jsonCode"></code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
