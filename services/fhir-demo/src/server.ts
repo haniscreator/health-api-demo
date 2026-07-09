@@ -1,7 +1,7 @@
 import app from './app';
 
 const PORT = parseInt(process.env.PORT || '3001', 10);
-const HOST = '127.0.0.1'; // MUST listen on localhost/127.0.0.1 for testing, NOT 0.0.0.0
+const HOST = '0.0.0.0';
 
 app.listen(PORT, HOST, () => {
   console.log(`[Server] FHIR Demo API running at http://${HOST}:${PORT}`);
