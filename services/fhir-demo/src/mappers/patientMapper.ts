@@ -1,7 +1,7 @@
 import { InternalPatient, FhirPatient, MappingExplanation } from '../types/fhir';
 
 /**
- * Maps an internal CP International Patient object to a valid HL7 FHIR R4 Patient resource.
+ * Maps an internal CP Patient object to a valid HL7 FHIR R4 Patient resource.
  * Follows the official HL7 Patient R4 specification.
  */
 export const mapToFhirPatient = (internal: InternalPatient): FhirPatient => {

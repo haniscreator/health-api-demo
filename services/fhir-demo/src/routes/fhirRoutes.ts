@@ -8,7 +8,7 @@ router.get('/api/fhir/metadata', fhirController.getMetadata);
 router.get('/api/fhir/patient', fhirController.getPatients);
 router.get('/api/fhir/patient/:id', fhirController.getPatientById);
 
-// CP International Internal Demo Mapping & Upload Routes
+// CP Internal Demo Mapping & Upload Routes
 router.get('/api/demo/patient', fhirController.getDemoPatient);
 router.post('/api/demo/patient', fhirController.getDemoPatient);
 router.get('/api/demo/patient/validate', fhirController.validateDemoPatient);

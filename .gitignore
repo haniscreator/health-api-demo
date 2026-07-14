@@ -32,3 +32,9 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Postman collections and design requirements
+postman/
+FHIR_Req.md
+Project_Req.md
+

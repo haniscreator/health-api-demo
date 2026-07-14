@@ -1,4 +1,4 @@
-// CP International FHIR Integration App Logic
+// CP FHIR Integration App Logic
 
 // Mock dataset for Randomizer
 const FIRST_NAMES_MALE = ['James', 'Robert', 'John', 'Michael', 'David', 'William', 'Richard', 'Alex', 'Sukhum', 'Kitti', 'Somchai'];

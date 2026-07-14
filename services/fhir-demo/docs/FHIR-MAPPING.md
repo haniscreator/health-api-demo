@@ -1,6 +1,6 @@
-# CP International to FHIR Patient Mapping Specification
+# CP to FHIR Patient Mapping Specification
 
-This document provides a field-by-field mapping specification between CP International's internal patient data structure and the HL7 FHIR R4 Patient resource.
+This document provides a field-by-field mapping specification between CP's internal patient data structure and the HL7 FHIR R4 Patient resource.
 
 ## Mapping Table
 

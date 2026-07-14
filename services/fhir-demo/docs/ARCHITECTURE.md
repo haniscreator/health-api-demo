@@ -1,6 +1,6 @@
 # Integration Architecture
 
-This document describes the architectural flow and design choices behind CP International's HL7 FHIR R4 Integration Proof of Concept.
+This document describes the architectural flow and design choices behind CP's HL7 FHIR R4 Integration Proof of Concept.
 
 ## Architecture Flow
 
@@ -8,7 +8,7 @@ The data flow from internal storage to a standardized external API is structured
 
 ```mermaid
 graph TD
-    A[CP International Internal Database] -->|Reads Patient Record| B[Express Controller]
+    A[CP Internal Database] -->|Reads Patient Record| B[Express Controller]
     B -->|Passes Record to Mapper| C[Patient Mapper Module]
     C -->|Transforms Data & Adds Extensions| D[Standard HL7 FHIR Patient Resource]
     D -->|Executes Validation| E{Local Validator}
@@ -34,6 +34,6 @@ graph TD
 * **Control & Customization**: Internal database structures allow rapid modifications, validation rules, and indexes without waiting for revisions to complex healthcare standards.
 
 ### 2. Why Mapping is Required
-* **Interoperability**: Healthcare systems, pharmacies, insurances, and government bodies communicate via standardized protocols like HL7 FHIR R4. Mapping enables CP International to interface with these ecosystems seamlessly.
+* **Interoperability**: Healthcare systems, pharmacies, insurances, and government bodies communicate via standardized protocols like HL7 FHIR R4. Mapping enables CP to interface with these ecosystems seamlessly.
 * **Format Translation**: Converts custom types (e.g. numeric genders `1` or `2`, custom string formats for HNO, and unformatted inputs) into globally recognized clinical standards.
 * **Separation of Concerns**: Changes to the internal schema do not break integrations. Developers only update the mapper translation mapping instead of coordinate-wide database refactoring.

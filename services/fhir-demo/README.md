@@ -1,6 +1,6 @@
-# CP International FHIR R4 Integration Proof of Concept
+# CP FHIR R4 Integration Proof of Concept
 
-This service acts as a Proof of Concept (POC) demonstrating how CP International can support the HL7 FHIR R4 standard without modifying the existing internal database schema structure. It maps internal patient data schemas to standard FHIR resources, performs local validations, and interacts with public FHIR servers.
+This service acts as a Proof of Concept (POC) demonstrating how CP can support the HL7 FHIR R4 standard without modifying the existing internal database schema structure. It maps internal patient data schemas to standard FHIR resources, performs local validations, and interacts with public FHIR servers.
 
 ## Tech Stack
 * **Node.js** & **TypeScript**
@@ -81,7 +81,7 @@ These endpoints call the public HAPI FHIR server (`https://hapi.fhir.org/baseR4`
 * **`GET /api/fhir/patient/:id`**
   - Fetches a single Patient resource by its unique FHIR ID.
 
-### 🧪 CP International Demo & Mapping
+### 🧪 CP Demo & Mapping
 * **`GET /api/demo/patient`**
   - Returns the static database schema mockup, the FHIR R4 Patient resource mapping result, and an element-by-element mapping translation matrix.
 * **`GET /api/demo/patient/validate`**
